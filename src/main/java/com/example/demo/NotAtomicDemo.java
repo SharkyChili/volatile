@@ -4,20 +4,22 @@ import java.util.concurrent.CountDownLatch;
 
 public class NotAtomicDemo {
     volatile static int k;
+//    static int k = 0;
     public static void main(String[] args) {
-        int num = 100;
+        int num = 100000;
         CountDownLatch countDownLatch = new CountDownLatch(num);
         for (int i = 0; i < num; i++) {
             new Thread(()->{
                 k++;
+                countDownLatch.countDown();
             }).start();
-            countDownLatch.countDown();
         }
+
 
         try {
             countDownLatch.await();
             System.out.println(k);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
